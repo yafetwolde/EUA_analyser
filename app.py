@@ -26,6 +26,36 @@ st.set_page_config(
 )
 
 # ---------------------------------------------------------------------------
+# PASSWORD PROTECTION
+# ---------------------------------------------------------------------------
+def check_password():
+    """Returns `True` if the user had the correct password."""
+    def password_entered():
+        if st.session_state["password"] == "ShellEUA2026":  # ⚠️ Change this password!
+            st.session_state["password_correct"] = True
+            del st.session_state["password"]
+        else:
+            st.session_state["password_correct"] = False
+
+    if "password_correct" not in st.session_state:
+        st.markdown('<div class="main-title">⚡ EUA Delta Analyser</div>', unsafe_allow_html=True)
+        st.markdown('<div class="subtitle">Secure access required</div>', unsafe_allow_html=True)
+        st.text_input("Password", type="password", on_change=password_entered, key="password")
+        st.info("👋 Enter the password to access the EUA Delta Analyser")
+        return False
+    elif not st.session_state["password_correct"]:
+        st.markdown('<div class="main-title">⚡ EUA Delta Analyser</div>', unsafe_allow_html=True)
+        st.markdown('<div class="subtitle">Secure access required</div>', unsafe_allow_html=True)
+        st.text_input("Password", type="password", on_change=password_entered, key="password")
+        st.error("😕 Password incorrect — please try again")
+        return False
+    else:
+        return True
+
+if not check_password():
+    st.stop()
+
+# ---------------------------------------------------------------------------
 # STYLES
 # ---------------------------------------------------------------------------
 st.markdown("""
